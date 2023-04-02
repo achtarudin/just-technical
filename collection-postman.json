@@ -1,0 +1,144 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Boats",
+    "dateExported": "2023-04-02T09:29:25.247Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "b3c249f4-b40d-4b73-a035-699b71e9f4cd",
+            "name": "User",
+            "containerId": "",
+            "created": "2023-04-02T05:16:52.289Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "e80c3dcf-9443-4288-9046-99c2f85f5cd7",
+            "name": "Admin",
+            "containerId": "",
+            "created": "2023-04-02T07:12:52.955Z",
+            "sortNum": 20000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "cb00326a-8d70-4071-8ae2-65d04558cdf2",
+            "colId": "505e45d2-7c1d-4959-9ce3-db6ac413cdd7",
+            "containerId": "",
+            "name": "Welcome ",
+            "url": "https://boats.test/apiv1/welcome",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-04-02T04:50:23.384Z",
+            "modified": "2023-04-02T04:53:50.257Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "9fa71f0d-61ef-41aa-92cb-4b28dc4c456c",
+            "colId": "505e45d2-7c1d-4959-9ce3-db6ac413cdd7",
+            "containerId": "b3c249f4-b40d-4b73-a035-699b71e9f4cd",
+            "name": "User Registration",
+            "url": "https://boats.test/apiv1/registration",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-04-02T05:17:04.621Z",
+            "modified": "2023-04-02T07:10:32.800Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json",
+                    "isDisabled": true
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"caca2\",\n  \"email\": \"caca2@email\",\n  \"password\": \"secret214\",\n  \"password_confirmation\": \"secret214\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "47569d90-55e0-42ef-a005-d9711cc2cd7a",
+            "colId": "505e45d2-7c1d-4959-9ce3-db6ac413cdd7",
+            "containerId": "e80c3dcf-9443-4288-9046-99c2f85f5cd7",
+            "name": "Admin Login",
+            "url": "https://boats.test/apiv1/admin/login",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2023-04-02T07:23:21.813Z",
+            "modified": "2023-04-02T08:03:48.437Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"new@admin.com\",\n  \"password\": \"secret214\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "80b4cc3d-b7f3-4e0a-951e-1573aff3a359",
+            "colId": "505e45d2-7c1d-4959-9ce3-db6ac413cdd7",
+            "containerId": "e80c3dcf-9443-4288-9046-99c2f85f5cd7",
+            "name": "Admin Lists Verified User",
+            "url": "https://boats.test/apiv1/admin/verified-user",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2023-04-02T08:16:02.058Z",
+            "modified": "2023-04-02T08:27:16.005Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "b43f2117-014e-451e-a4b8-e9217407666b",
+            "colId": "505e45d2-7c1d-4959-9ce3-db6ac413cdd7",
+            "containerId": "e80c3dcf-9443-4288-9046-99c2f85f5cd7",
+            "name": "Admin Show Verified User",
+            "url": "https://boats.test/apiv1/admin/verified-user/19",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2023-04-02T08:52:07.932Z",
+            "modified": "2023-04-02T08:57:53.120Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "d94ebff7-35cc-4c6c-991c-5a134dd78d33",
+            "colId": "505e45d2-7c1d-4959-9ce3-db6ac413cdd7",
+            "containerId": "e80c3dcf-9443-4288-9046-99c2f85f5cd7",
+            "name": "Admin Update Verified User",
+            "url": "https://boats.test/apiv1/admin/verified-user/19",
+            "method": "PUT",
+            "sortNum": 70000,
+            "created": "2023-04-02T08:54:34.651Z",
+            "modified": "2023-04-02T09:14:49.840Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"status\": \"rejected\"\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}
