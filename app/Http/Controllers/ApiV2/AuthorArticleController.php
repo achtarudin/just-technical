@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\ApiV2;
 
 use Illuminate\Http\Request;
+use App\Exceptions\ApiV2Exception;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ArticleResource;
+use App\Http\Resources\ArticleCollection;
 use App\ServiceApiV2\ApiV2ArticelService;
+use App\Http\Requests\ApiV2\AuthorCreateArticleRequest;
+use App\Http\Requests\ApiV2\AuthorUpdateArticleRequest;
 
 class AuthorArticleController extends Controller
 {
@@ -24,9 +29,9 @@ class AuthorArticleController extends Controller
     {
         $articles = $this->service->search([])->paginate(10);
         return response()->json([
-            'message'   => 'List of Articels of author',
-            'data'      => $articles
-        ], 201);
+            'message'   => 'List of Articels of Author',
+            'data'      => new ArticleCollection($articles)
+        ], 200);
     }
 
     /**
@@ -35,9 +40,16 @@ class AuthorArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AuthorCreateArticleRequest $request)
     {
-        //
+        $valid = $request->validated();
+
+        $article = $this->service->save($valid);
+
+        return response()->json([
+            'message'   => 'New Article  of Author',
+            'data'      => new ArticleResource($article)
+        ], 201);
     }
 
     /**
@@ -50,21 +62,12 @@ class AuthorArticleController extends Controller
     {
         $article = $this->service->findById($id);
 
+        throw_if($article == false, new ApiV2Exception('Articel of Author Not Found', 404));
+
         return response()->json([
             'message'   => 'Articel of author',
-            'data'      => $article
-        ], 201);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+            'data'      => new ArticleResource($article)
+        ], 200);
     }
 
     /**
@@ -74,9 +77,20 @@ class AuthorArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AuthorUpdateArticleRequest $request, $id)
     {
-        //
+        $article = $this->service->findById($id);
+
+        throw_if($article == false, new ApiV2Exception('Articel of Author Not Found', 404));
+
+        $valid = $request->validated();
+
+        $article = $this->service->update($article, $valid);
+
+        return response()->json([
+            'message'   => 'Update Articel of author',
+            'data'      => new ArticleResource($article)
+        ], 200);
     }
 
     /**
@@ -87,6 +101,17 @@ class AuthorArticleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $article = $this->service->findById($id);
+
+        throw_if($article == false, new ApiV2Exception('Articel of Author Not Found', 404));
+
+        $this->service->delete($article);
+
+        return response()->json([
+            'message'   => 'Delete Articel of author',
+            'data'      => new ArticleResource($article)
+        ], 200);
+
+
     }
 }

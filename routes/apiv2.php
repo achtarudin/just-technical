@@ -32,7 +32,7 @@ Route::middleware([ApiV2SettingMiddleware::class])->group(function(){
         Route::get('/author/account', [AuthorController::class, 'account']);
         Route::put('/author/account', [AuthorController::class, 'updateAccount']);
 
-        Route::resource('author/articles', AuthorArticleController::class)->except(['create']);
+        Route::apiResource('author/articles', AuthorArticleController::class);
 
     });
 });
