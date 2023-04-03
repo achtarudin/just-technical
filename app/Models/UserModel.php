@@ -9,16 +9,19 @@ use App\Models\Type\TypeUserModel;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Otp\OtpRegistrationModel;
 use Illuminate\Notifications\Notifiable;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class UserModel extends Authenticatable implements JWTSubject
+class UserModel extends Authenticatable implements JWTSubject, FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     protected $table = "users";
+
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -68,6 +71,14 @@ class UserModel extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Filament Config User
+     */
+    public function canAccessFilament(): bool
+    {
+        return true;
     }
 
     /**
