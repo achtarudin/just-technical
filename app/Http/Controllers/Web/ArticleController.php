@@ -26,7 +26,9 @@ class ArticleController extends Controller
     {
         $article = $this->service->findById($id);
 
-        return $article;
+        abort_if($article == null, 404);
+
+        return view('articles.home.articels', compact('article'));
 
     }
 
