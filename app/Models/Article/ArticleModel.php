@@ -25,4 +25,12 @@ class ArticleModel extends Model
     {
         return $this->belongsTo(UserModel::class, 'user_id', 'id');
     }
+
+    /**
+     * Getters
+     */
+    public function getBannerAttribute()
+    {
+        return $this->image ? url("/storage/{$this->image}") : null;
+    }
 }

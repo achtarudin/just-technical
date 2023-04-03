@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\ArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('articels.list');
 });
+
+Route::get('articels', [ArticleController::class, 'index'])->name('articels.list');
+Route::get('articels/{id}/read', [ArticleController::class, 'show'])->name('articels.read');
