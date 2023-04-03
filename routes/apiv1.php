@@ -6,6 +6,7 @@ use App\Http\Middleware\ApiV1\AdminMiddleware;
 use App\Http\Controllers\ApiV1\AdminLoginController;
 use App\Http\Controllers\ApiV1\RegistrationController;
 use App\Http\Controllers\ApiV1\AdminVerifiedUserController;
+use App\Http\Middleware\ApiV1\ApiV1SettingMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,22 +19,24 @@ use App\Http\Controllers\ApiV1\AdminVerifiedUserController;
 |
 */
 
-Route::get('welcome', function (Request $request) {
-    return response()->json(['message' => 'welcome to my api'], 200);
-});
+Route::middleware([ApiV1SettingMiddleware::class])
+    ->group(function () {
 
-/**
- * Route For User
- */
+        Route::get('welcome', function (Request $request) {
+            return response()->json(['message' => 'welcome to my api'], 200);
+        });
 
-Route::resource('registration', RegistrationController::class);
+        /**
+         * Route For User
+         */
+        Route::resource('registration', RegistrationController::class);
 
+        /**
+         * Route For Admin
+         */
 
-/**
- * Route For Admin
- */
-
-Route::resource('admin/login', AdminLoginController::class);
-Route::middleware([AdminMiddleware::class])->group(function () {
-    Route::resource('admin/verified-user', AdminVerifiedUserController::class);
-});
+        Route::resource('admin/login', AdminLoginController::class);
+        Route::middleware([AdminMiddleware::class])->group(function () {
+            Route::resource('admin/verified-user', AdminVerifiedUserController::class);
+        });
+    });
