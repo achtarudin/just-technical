@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\ApiV2;
 
+use App\Exceptions\ApiV2Exception;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use App\ServiceApiV2\ApiV2AuthService;
 use Illuminate\Support\Facades\Password;
 use App\Http\Requests\ApiV2\AuthorLoginRequest;
@@ -31,6 +33,10 @@ class AuthController extends Controller
     public function loginAuthor(AuthorLoginRequest $request)
     {
         $user = $this->service->findAuthor($request->only('email'));
+
+        $passwordMatch = Hash::check($request->password, $user->password);
+
+        throw_if($passwordMatch == false, new ApiV2Exception('Author Not Found', 404));
 
         return response()->json([
             'message'   => 'Author Logged Successfully',
