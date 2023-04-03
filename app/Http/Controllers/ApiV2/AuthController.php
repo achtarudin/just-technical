@@ -15,6 +15,8 @@ class AuthController extends Controller
 {
     protected $service;
 
+    const TOKEN_NAME = 'AUTHOR';
+
     public function __construct(ApiV2AuthService $service)
     {
         $this->service = $service;
@@ -38,9 +40,11 @@ class AuthController extends Controller
 
         throw_if($passwordMatch == false, new ApiV2Exception('Author Not Found', 404));
 
+        $user->tokens()->where('name', self::TOKEN_NAME)->delete();
+
         return response()->json([
             'message'   => 'Author Logged Successfully',
-            'data'      => ['token' => $user->createToken("API TOKEN")->plainTextToken]
+            'data'      => ['token' => $user->createToken(self::TOKEN_NAME)->plainTextToken]
         ], 201);
     }
 

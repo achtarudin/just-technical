@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiV2\AuthController;
+use App\Http\Controllers\ApiV2\AuthorController;
+use App\Http\Middleware\ApiV2\ApiV2SettingMiddleware;
+use App\Http\Controllers\ApiV2\AuthorArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +18,27 @@ use App\Http\Controllers\ApiV2\AuthController;
 |
 */
 
-Route::post('/author/registration', [AuthController::class, 'registrationAuthor']);
+Route::middleware(['guest'])->group(function(){
+    Route::post('/author/registration', [AuthController::class, 'registrationAuthor']);
 
-Route::post('/author/login', [AuthController::class, 'loginAuthor']);
+    Route::post('/author/login', [AuthController::class, 'loginAuthor']);
 
-Route::post('/author/forget-password', [AuthController::class, 'forgetPassword']);
+    Route::post('/author/forget-password', [AuthController::class, 'forgetPassword']);
+});
+
+
+Route::middleware([ApiV2SettingMiddleware::class])->group(function(){
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('/author/account', [AuthorController::class, 'account']);
+        Route::put('/author/account', [AuthorController::class, 'updateAccount']);
+
+        Route::resource('author/articles', AuthorArticleController::class)->except(['create']);
+
+    });
+});
+
+
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

@@ -37,4 +37,26 @@ class ApiV2AuthService implements ApiV2AuthInterface
             throw new ApiV2Exception('Registration for Author Failed', 500);
         }
     }
+
+    public function updateAccountAuthor(array $attributes): ?Model
+    {
+        DB::beginTransaction();
+        try {
+            $newPassword = $attributes['password'] ?? null;
+            $author =  auth()->user();
+
+            $data = array_merge($attributes, [
+                'password' => $newPassword ? Hash::make($newPassword) : $author->password
+            ]);
+
+            $author->update($data);
+            $author->updated_at = now();
+            $author->save();
+            DB::commit();
+            return $author;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new ApiV2Exception('Update Account for Author Failed', 500);
+        }
+    }
 }
