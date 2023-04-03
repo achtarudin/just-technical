@@ -10,5 +10,9 @@ php artisan migrate
 
 php artisan db:seed   
 
-php artisan storage:link             
+php artisan storage:link  
+
+npm install
+
+npm run build
 
