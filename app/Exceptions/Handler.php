@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Exceptions\ApiV2Exception;
+use Illuminate\Database\QueryException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
 
 class Handler extends ExceptionHandler
 {
@@ -43,8 +46,25 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        $this->renderable(function (ApiV2Exception $e, Request $request) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message'   => $e->getMessage(),
+                    'data'      => $e->getDataOption()
+                ], $e->getCode());
+            }
+        });
+
+        $this->renderable(function (QueryException $e, Request $request) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message'   => 'Handler QueryException',
+                    'data'      => []
+                ], 500);
+            }
+        });
+
         $this->reportable(function (Throwable $e) {
-            //
         });
     }
 }
