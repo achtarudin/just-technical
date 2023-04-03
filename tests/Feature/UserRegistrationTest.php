@@ -56,13 +56,14 @@ it('Validation Error When Body Password And Password Confirmation Not Same', fun
 
 it('Validation Success When All Body Is Set', function () {
     $credential = $this->credential;
+
     $response = $this->postJson('/apiv1/registration', $credential);
 
     $user = UserModel::where('email', $credential['email'])->first();
 
-    expect($user != null)->toBeTrue();
-    expect($user->user_type != null)->toBeTrue();
-    expect($user->otp_registration != null)->toBeTrue();
+    $this->assertModelExists($user);
+    $this->assertModelExists($user->user_type);
+    $this->assertModelExists($user->otp_registration);
 
     $response
         ->assertStatus(200)
