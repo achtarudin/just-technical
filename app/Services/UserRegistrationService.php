@@ -6,14 +6,14 @@ use Exception;
 use Nette\Utils\Random;
 use App\Models\UserModel;
 use App\Models\Type\TypeModel;
+use App\Exceptions\ApiV1Exception;
 use App\Services\ServiceInterface;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
-class RegistrationService implements ServiceInterface
+class UserRegistrationService implements ServiceInterface
 {
     /**
      * Return null or Model
@@ -28,9 +28,16 @@ class RegistrationService implements ServiceInterface
      * Return null or Builder
      * Param array of $attributes
      */
-    public function search(array $attributes): ?Builder
+    public function search(array $attributes = []): ?Builder
     {
-        return null;
+        try {
+            return UserModel::query()
+                ->when(count($attributes), function ($qw) use ($attributes) {
+                    $qw->where($attributes);
+                });
+        } catch (Exception $th) {
+            throw_if(true, new ApiV1Exception('Error When search user', 500));
+        }
     }
 
     /**
@@ -53,7 +60,7 @@ class RegistrationService implements ServiceInterface
             // Find type user
             $typeUser = TypeModel::typeUser()->first();
 
-            throw_if($typeUser == null, new Exception('Type of User not found'));
+            throw_if($typeUser == null, new ApiV1Exception('Type of User not found', 500));
 
             // Create type of user
             $user->user_type()->create([
@@ -73,7 +80,7 @@ class RegistrationService implements ServiceInterface
 
             // Callback on otp error
             $resultOtp->onError(function () {
-                throw_if(true, new Exception('Failed Registration User For OTP'));
+                throw_if(true, new ApiV1Exception('Failed Registration User For OTP', 500));
             });
 
             DB::commit();
@@ -92,6 +99,8 @@ class RegistrationService implements ServiceInterface
     {
         DB::beginTransaction();
         try {
+            $model->email_verified_at = now();
+            $model->save();
             DB::commit();
             return $model;
         } catch (Exception $e) {

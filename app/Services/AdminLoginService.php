@@ -26,11 +26,12 @@ class AdminLoginService implements ServiceInterface
      */
     public function search(array $attributes): ?Builder
     {
-        return UserModel::where($attributes)->whereHas('user_type', function($query){
-            $query->whereHas('type', function($query){
-                $query->typeAdmin();
+        return UserModel::where($attributes)
+            ->whereHas('user_type', function ($query) {
+                $query->whereHas('type', function ($query) {
+                    $query->typeAdmin();
+                });
             });
-        });
     }
 
     /**

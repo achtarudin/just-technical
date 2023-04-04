@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Models\Otp;
+namespace App\Models\Boat;
 
 use App\Models\UserModel;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Http\Client\Response;
 
-class OtpRegistrationModel extends Model
+class UserBoatModel extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -19,31 +17,29 @@ class OtpRegistrationModel extends Model
 
     const REJECTED = 'rejected';
 
-    protected $table = "otp_registrations";
+    protected $table = "user_boats";
 
     protected $guarded = [];
 
     public $timestamps = false;
 
     /**
-     * Send otp to user
+     * Getters
      */
-    public function sendOtpToUser(): Response
+    public function getImageStorageAttribute()
     {
-        $otpEndPoint = 'https://script.google.com/macros/s/AKfycbxFNsyMXW8chGL8YhdQE1Q1yBbx5XEsq-BJeNF1a6sKoowaL_9DtcUvE_Pp0r5ootgMhQ/exec';
+        return $this->image ? url("/storage/{$this->image}") : null;
+    }
 
-        return  Http::post($otpEndPoint, [
-            'email'     => $this->user->email,
-            'subject'   => 'OTP Registration',
-            'message'   => 'This Your OTP Token',
-            'token'     => $this->otp,
-        ]);
+    public function getDocumentStorageAttribute()
+    {
+        return $this->document ? url("/storage/{$this->document}") : null;
     }
 
     /**
      * Define the relationships
      */
-    public function user()
+    public function author()
     {
         return $this->belongsTo(UserModel::class, 'user_id', 'id')->withDefault();
     }

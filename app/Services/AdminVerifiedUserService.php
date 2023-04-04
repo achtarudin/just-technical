@@ -24,7 +24,7 @@ class AdminVerifiedUserService implements ServiceInterface
      * Return null or Builder
      * Param array of $attributes
      */
-    public function search(array $attributes): ?Builder
+    public function search(array $attributes = []): ?Builder
     {
         return OtpRegistrationModel::query()
             ->when(count($attributes), function ($query) use ($attributes) {

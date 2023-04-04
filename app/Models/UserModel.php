@@ -9,6 +9,7 @@ use App\Models\Type\TypeUserModel;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Otp\OtpRegistrationModel;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
@@ -80,6 +81,46 @@ class UserModel extends Authenticatable implements JWTSubject, FilamentUser
     {
         return true;
     }
+
+    /**
+     * Query Scope
+     */
+    public function scopeUserValidateOtp(Builder $query, string $otpCode)
+    {
+        $query->whereNull(['email_verified_at'])
+            ->whereHas('user_type', function ($query) {
+                $query->whereHas('type', function ($query) {
+                    $query->typeUser();
+                });
+            })
+            ->whereHas('otp_registration', function ($query) use ($otpCode) {
+                $query->whereOtp($otpCode);
+            });
+    }
+
+    public function scopeUserIsVerifed(Builder $query)
+    {
+        $query->whereNotNull(['email_verified_at'])
+            ->whereHas('user_type', function ($query) {
+                $query->whereHas('type', function ($query) {
+                    $query->typeUser();
+                });
+            })
+            ->whereHas('otp_registration', function ($query) {
+                $query->where('status', OtpRegistrationModel::APROVED);
+            });
+    }
+
+    public function scopeUserIsAdmin(Builder $query)
+    {
+        $query->whereNotNull(['email_verified_at'])
+            ->whereHas('user_type', function ($query) {
+                $query->whereHas('type', function ($query) {
+                    $query->typeAdmin();
+                });
+            });
+    }
+
 
     /**
      * Define the relationship

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 

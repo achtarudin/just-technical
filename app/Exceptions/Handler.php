@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Throwable;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Exceptions\ApiV1Exception;
 use App\Exceptions\ApiV2Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -57,9 +58,20 @@ class Handler extends ExceptionHandler
             }
         });
 
+        $this->renderable(function (ApiV1Exception $e, Request $request) {
+            $containsApiv1 = Str::of(url()->current())->contains('apiv1');
+            if ($request->wantsJson() || $containsApiv1) {
+                return response()->json([
+                    'message'   => $e->getMessage(),
+                    'data'      => $e->getDataOption()
+                ], $e->getCode());
+            }
+        });
+
         $this->renderable(function (QueryException $e, Request $request) {
             $containsApiv2 = Str::of(url()->current())->contains('apiv2');
-            if ($request->wantsJson() || $containsApiv2) {
+            $containsApiv1 = Str::of(url()->current())->contains('apiv1');
+            if ($request->wantsJson() || $containsApiv2 || $containsApiv1) {
                 return response()->json([
                     'message'   => 'Handler QueryException',
                     'data'      => []

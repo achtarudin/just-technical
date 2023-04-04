@@ -2,11 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\ApiV1\UserMiddleware;
 use App\Http\Middleware\ApiV1\AdminMiddleware;
+use App\Http\Controllers\ApiV1\UserBoatController;
 use App\Http\Controllers\ApiV1\AdminLoginController;
-use App\Http\Controllers\ApiV1\RegistrationController;
-use App\Http\Controllers\ApiV1\AdminVerifiedUserController;
 use App\Http\Middleware\ApiV1\ApiV1SettingMiddleware;
+use App\Http\Controllers\ApiV1\UserRegistrationController;
+use App\Http\Controllers\ApiV1\AdminVerifiedUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +31,13 @@ Route::middleware([ApiV1SettingMiddleware::class])
         /**
          * Route For User
          */
-        Route::resource('registration', RegistrationController::class);
+        Route::post('login', [UserRegistrationController::class, 'login']);
+        Route::post('registration', [UserRegistrationController::class, 'registration']);
+        Route::post('registration/validate-otp', [UserRegistrationController::class, 'validateOtp']);
+
+        Route::middleware([UserMiddleware::class])->group(function () {
+            Route::apiResource('boats', UserBoatController::class);
+        });
 
         /**
          * Route For Admin

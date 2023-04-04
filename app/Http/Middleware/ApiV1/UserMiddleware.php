@@ -12,17 +12,13 @@ class UserMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        // if (auth()->user() == null) {
-        //     $user =  UserModel::query()
-        //         ->whereHas('user_type', function ($query) {
-        //             $query->whereHas('type', function ($query) {
-        //                 $query->typeUser();
-        //             });
-        //         })
-        //         ->first();
-        //     $token = auth()->login($user);
-        //     $request->headers->set('Authorization Bearer ', (string) $token);
-        // }
+        if (auth()->user() == null) {
+            $user =  UserModel::query()
+                ->userIsVerifed()
+                ->first();
+            $token = auth()->login($user);
+            $request->headers->set('Authorization Bearer ', (string) $token);
+        }
 
         if (auth()->user()) {
             if (auth()->user()->user_type->type->name == TypeModel::USER) {
