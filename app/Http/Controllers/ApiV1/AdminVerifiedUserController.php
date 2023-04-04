@@ -23,6 +23,7 @@ class AdminVerifiedUserController extends Controller
     {
         $results =  $this->service
             ->search()
+            ->with(['user', 'admin'])
             ->whereHas('user', function ($qw) {
                 $qw->whereNotNull(['email_verified_at']);
             })

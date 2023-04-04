@@ -22,16 +22,11 @@ class UserBoatController extends Controller
 
     public function index()
     {
-        $results =  $this->service->search()->paginate(10);
+        $results =  $this->service->search()->with(['author', 'admin'])->paginate(10);
 
         return new BoatCollection($results);
 
-        // return response()->json([
-        //     'message'   => "All Boats",
-        //     'data'      => new BoatCollection($results)
-        // ]);
     }
-
 
     public function store(BoatRequest $request)
     {
