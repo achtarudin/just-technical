@@ -12,14 +12,19 @@ class AdminMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user() == null) {
-            $user = UserModel::query()->userIsAdmin()->first();
-            $token = auth()->login($user);
-            $request->headers->set('Authorization Bearer ', (string) $token);
-        }
+        // if (auth()->user() == null) {
+        //     $user = UserModel::query()->userIsAdmin()->first();
+        //     $token = auth()->login($user);
+        //     $request->headers->set('Authorization Bearer ', (string) $token);
+        // }
 
         if (auth()->user()) {
-            if (auth()->user()->user_type->type->name == TypeModel::ADMIN) {
+
+            $isAdmin = UserModel::query()->userIsAdmin()
+                ->whereId(auth()->user()->id)
+                ->first();
+
+            if ($isAdmin) {
                 return $next($request);
             }
             auth()->invalidate(true);
