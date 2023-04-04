@@ -23,13 +23,17 @@ class BoatResource extends JsonResource
             'size' => "{$this->size} Meter",
             'captain_name' => $this->captain_name,
             'total_abk' => "{$this->total_abk} People",
-            'document_number' => $this->document_number,
-            'document' => $this->document_storage,
-            'image' => $this->image_storage,
+            $this->mergeWhen(auth()->check(), [
+                'document_number' => $this->document_number,
+                'document' => $this->document_storage,
+                'image' => $this->image_storage,
+                'description' => $this->description,
+                'admin' => $this->admin->name,
+            ]),
+
             'user' => $this->author->name,
             'status' => $this->status,
-            'description' => $this->description,
-            'admin' => $this->admin->name,
+
         ];
     }
 }

@@ -35,7 +35,7 @@ class UserBoatController extends Controller
         $result =  $this->service->save($valid);
 
         return response()->json([
-            'message'   => "Create a new boats success",
+            'message'   => "Create a new boat success",
             'data'      => new BoatResource($result->fresh())
         ]);
     }
@@ -47,7 +47,7 @@ class UserBoatController extends Controller
         throw_if($result == null, new ApiV1Exception('Boat Not Found', 404));
 
         return response()->json([
-            'message'   => "All Boats",
+            'message'   => "Show A Boat",
             'data'      => new BoatResource($result)
         ]);
 
@@ -64,7 +64,7 @@ class UserBoatController extends Controller
         $resultUpdate =  $this->service->update($result, $valid);
 
         return response()->json([
-            'message'   => "Upadate Boats",
+            'message'   => "Upadate A Boat",
             'data'      => new BoatResource($resultUpdate->fresh())
         ]);
     }

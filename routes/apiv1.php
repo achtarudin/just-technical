@@ -8,6 +8,7 @@ use App\Http\Controllers\ApiV1\UserBoatController;
 use App\Http\Controllers\ApiV1\AdminLoginController;
 use App\Http\Middleware\ApiV1\ApiV1SettingMiddleware;
 use App\Http\Controllers\ApiV1\UserRegistrationController;
+use App\Http\Controllers\ApiV1\AdminVerifiedBoatController;
 use App\Http\Controllers\ApiV1\AdminVerifiedUserController;
 
 /*
@@ -29,6 +30,11 @@ Route::middleware([ApiV1SettingMiddleware::class])
         });
 
         /**
+         * Public To show all boats
+         */
+        Route::get('all-boats', [AdminVerifiedBoatController::class, 'index']);
+
+        /**
          * Route For User
          */
         Route::post('login', [UserRegistrationController::class, 'login']);
@@ -45,6 +51,7 @@ Route::middleware([ApiV1SettingMiddleware::class])
 
         Route::resource('admin/login', AdminLoginController::class);
         Route::middleware([AdminMiddleware::class])->group(function () {
-            Route::resource('admin/verified-user', AdminVerifiedUserController::class);
+            Route::apiResource('admin/verified-user', AdminVerifiedUserController::class);
+            Route::apiResource('admin/verified-boat', AdminVerifiedBoatController::class)->except(['store']);
         });
     });
